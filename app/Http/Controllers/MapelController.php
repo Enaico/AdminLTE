@@ -26,6 +26,16 @@ class MapelController extends Controller
         return datatables()
             ->of($mapel)
             ->addIndexColumn()
+            ->addColumn('aksi', function($mapel){
+                return '
+                <div class="btn-group">
+                    <button type="buttton"onclick="editData(`'.route('mapel.update', $mapel->id).'`)" class="btn btn-flat btn-sm btn-warning"><i class="fa fa-edit"></i></button>
+                    <button type="buttton"onclick="deleteData(`'.route('mapel.destroy', $mapel->id).'`)" class="btn btn-flat btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                </div>
+                
+                ';
+            })
+            ->rawColumns(['aksi'])
             ->make(true);
     }
 

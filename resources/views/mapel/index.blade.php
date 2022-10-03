@@ -33,7 +33,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <table class="table table-hover-text-nowrap">
+                            <table class="table table-hover-text-nowrap" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
@@ -41,18 +41,16 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                            
                                     @foreach ( $mapel as $item )
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->nama }}</td>
                                             <td>
-                                                <button type="buttton"onclick="editData('{{route('mapel.update', $item->id)}}')" class="btn btn-flat btn-sm btn-warning"><i class="fa fa-edit"></i></button>
-                                                <button type="buttton"onclick="deleteData('{{route('mapel.destroy', $item->id)}}')" class="btn btn-flat btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
-                                </tbody>
+                                
                             </table>
                         </div>
                     </div>
@@ -70,11 +68,12 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: '{{'route('mapel.data')'}}'
+                    url: '{{ route('mapel.data') }}'
                 },
                 columns: [
                     {data: 'DT_RowIndex'},
                     {data: 'nama'},
+                    {data: 'aksi'}
                 ]
             });
         })
@@ -86,10 +85,19 @@
                 $.post($('#modalForm form').attr('action'), $('#modalForm form').serialize())
                 .done((response) => {
                     $('#modalForm').modal('hide');
-                    tabel.ajax.reload();
+                    table.ajax.reload();
+                    iziToast.success({
+                        title: 'Sukses',
+                        message: 'Data berhasil disimpan',
+                        position: 'topRight'
+                    })
                 })
                 .fail((errors) => {
-                    alert('Tidak dapat menyimpant Data');
+                    iziToast.error({
+                        title: 'Gagal',
+                        message: 'Data gagal disimpan',
+                        position: 'topRight'
+                    })
                     return;
                 })
             }
@@ -102,8 +110,10 @@
             $('#modalForm').modal('show');
             $('#modalForm .modal-title').text('Tambah Data Mapel');
 
+            $('#modalForm form')[0].reset();
             $('#modalForm form').attr('action', url);
             $('#modalForm [name=_method]').val('post');
+            table.ajax.reload();
         }
         function editData(url){
             $('#modalForm').modal('show');
@@ -125,20 +135,41 @@
         }
 
         function deleteData(url){
-            if(confirm('Yakin akan menghapus data?')){
+            swal({
+                title: "Yakinzz?",
+                text: "OK=HAPUSS HUHHUHU",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
                 $.post(url, {
                     '_token': $('[name=csrf-token]').attr('content'),
                     '_method': 'delete'
                 })
                 .done((response) => {
-                    alert('Data berhasil di hapus');
+                    swal({
+                        title: "Sukses",
+                        text: "Berhasil aborsi data!?!?!",
+                        icon: "success",
+                    });
                     return;
                 })
                 .fail((errors) => {
-                    alert('Data gagal di hapus!');
+                    swal({
+                        title: "Sukses",
+                        text: "Berhasil aborsi data!?!?!",
+                        icon: "error",
+                    });
                     return;
-                })
-            } 
-        }
+        
+                });
+
+                table.ajax.reload();
+                }         
+            });        
+        }      
+        
     </script>
 @endpush 

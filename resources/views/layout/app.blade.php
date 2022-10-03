@@ -19,6 +19,10 @@
     <link rel="stylesheet" href="{{asset('asset/datatable/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('asset/datatable/responsive.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('asset/datatable/buttons.bootstrap4.min.css')}}">
+
+    <!-- iziToast -->
+    <link rel="stylesheet" href="{{asset('asset/izitoast/iziToast.min.css')}}">
+
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -102,6 +106,11 @@
     <script src="{{asset('asset/datatable/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('asset/datatable/responsive.bootstrap4.min.js')}}"></script>
     
+    <!-- Sweet Alert -->
+    <script src="{{asset('asset/swal/sweetalert.min.js')}}"></script>
+
+    <!-- iZiToast -->
+    <script src="{{asset('asset/izitoast/iziToast.min.js')}}"></script>
 
     @stack('script')
 
