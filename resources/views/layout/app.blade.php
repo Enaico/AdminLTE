@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <link rel="stylesheet" href="{{ asset('asset/css/adminlte.min.css') }}">
+
+    <!--Data Table-->
+    <link rel="stylesheet" href="{{asset('asset/datatable/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{asset('asset/datatable/responsive.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{asset('asset/datatable/buttons.bootstrap4.min.css')}}">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -90,6 +95,13 @@
     <script src="{{asset('asset/js/bootstrap.bundle.min.js') }}"></script>
 
     <script src="{{asset('asset/js/adminlte.min.js?v=3.2.0') }}"></script>
+
+    <!-- Datatable -->
+    <script src="{{asset('asset/datatable/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('asset/datatable/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('asset/datatable/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('asset/datatable/responsive.bootstrap4.min.js')}}"></script>
+    
 
     @stack('script')
 

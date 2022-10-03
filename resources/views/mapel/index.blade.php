@@ -33,7 +33,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <Table class="table table-hover-text-nowrap">
+                            <table class="table table-hover-text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
@@ -47,13 +47,13 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->nama }}</td>
                                             <td>
-                                                <button type="buttton"onclick="editData()" class="btn btn-flat btn-sm btn-warning"><i class="fa fa-edit"></i></button>
-                                                <a href="#" class="btn btn-flat btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                                                <button type="buttton"onclick="editData('{{route('mapel.update', $item->id)}}')" class="btn btn-flat btn-sm btn-warning"><i class="fa fa-edit"></i></button>
+                                                <button type="buttton"onclick="deleteData('{{route('mapel.destroy', $item->id)}}')" class="btn btn-flat btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
-                            </Table>
+                            </table>
                         </div>
                     </div>
         </section> 
@@ -63,11 +63,30 @@
 @push ('script')
     <script>
 
+        let table;
+
+        $(function() {
+            table = $('.table').DataTable({
+                processing: true,
+                autowidth: false,
+                ajax: {
+                    url: '{{'route('mapel.data')'}}'
+                },
+                columns: [
+                    {data: 'DT_RowIndex'},
+                    {data: 'nama'},
+                ]
+            });
+        })
+
+
+
         $('#modalForm').on('submit', function(e){
             if(! e.preventDefault()){
                 $.post($('#modalForm form').attr('action'), $('#modalForm form').serialize())
                 .done((response) => {
                     $('#modalForm').modal('hide');
+                    tabel.ajax.reload();
                 })
                 .fail((errors) => {
                     alert('Tidak dapat menyimpant Data');
@@ -86,9 +105,40 @@
             $('#modalForm form').attr('action', url);
             $('#modalForm [name=_method]').val('post');
         }
-        function editData(){
+        function editData(url){
             $('#modalForm').modal('show');
             $('#modalForm .modal-title').text('Edit Data Mapel');
+
+            $('#modalForm form')[0].reset();
+            $('#modalForm form').attr('action', url);
+            $('#modalForm [name=_method]').val('put');
+
+            $.get(url)
+                .done((response) => {
+                    $('#modalForm [name=nama]').val(response.nama);
+                    // console.log(response.name);
+                })
+                .fail((errors) => {
+                    alert('Tidak dapat menampilkan data');
+                    return; 
+                })
+        }
+
+        function deleteData(url){
+            if(confirm('Yakin akan menghapus data?')){
+                $.post(url, {
+                    '_token': $('[name=csrf-token]').attr('content'),
+                    '_method': 'delete'
+                })
+                .done((response) => {
+                    alert('Data berhasil di hapus');
+                    return;
+                })
+                .fail((errors) => {
+                    alert('Data gagal di hapus!');
+                    return;
+                })
+            } 
         }
     </script>
 @endpush 
