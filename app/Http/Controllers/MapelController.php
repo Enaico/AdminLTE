@@ -21,7 +21,7 @@ class MapelController extends Controller
 
     public function data()
     {
-        $mapel = Mapel::orderBy('id', 'desc')->get();
+        $mapel = Mapel::orderBy('id', 'asc')->get();
 
         return datatables()
             ->of($mapel)

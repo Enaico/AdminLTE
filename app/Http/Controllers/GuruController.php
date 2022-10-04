@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
   
 use App\Models\Guru;
+use App\Models\Mapel;
 use Illuminate\Http\Request;
+use Validator;
 
 class GuruController extends Controller
 {
@@ -15,9 +17,31 @@ class GuruController extends Controller
     public function index()
     {
         $guru = Guru::all();
-        return view('guru.index', compact('guru'));
+        $mapel = Mapel::all();
+        return view('guru.index', compact('guru','mapel'));
     }
 
+    public function data()
+    {
+        $guru = Guru::orderBy('id','asc')->get();
+
+        return datatables()
+            ->of($guru)
+            ->addIndexColumn()          
+            ->editColumn('mapel_id', function($guru){
+                return !empty($guru->mapel->nama) ? $guru->mapel->nama : 'Mapel di input' ;
+            })
+            ->editColumn('aksi', function($guru){   
+                return '         
+                    <div class="btn-group">
+                        <button type="buttton" onclick="editData(`'.route('guru.update', $guru->id).'`)" class="btn btn-flat btn-sm btn-warning"><i class="fa fa-edit"></i></button>
+                        <button type="buttton" onclick="deleteData(`'.route('guru.destroy', $guru->id).'`)" class="btn btn-flat btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                    </div>
+                ';
+            })
+            ->rawColumns(['aksi'])
+            ->make('true');
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -36,7 +60,27 @@ class GuruController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'nama' => 'required',
+            'jenis_kelamin' => 'required',
+            'mapel_id' => 'required'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+
+        $guru = Guru::create([
+            'nama' => $request->nama,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'mapel_id' => $request->mapel_id
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil disimpan',
+            'data' => $guru
+        ]);
     }
 
     /**
@@ -45,9 +89,10 @@ class GuruController extends Controller
      * @param  \App\Models\guru  $guru
      * @return \Illuminate\Http\Response
      */
-    public function show(Guru $guru)
+    public function show($id)
     {
-        //
+        $guru = Guru::find($id);
+        return response()->json($guru);
     }
 
     /**
@@ -68,9 +113,15 @@ class GuruController extends Controller
      * @param  \App\Models\guru  $guru
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Guru $guru)
+    public function update(Request $request, $id)
     {
-        //
+        $guru = Guru::find($id);
+        $guru->nama = $request->nama;
+        $guru->jenis_kelamin = $request->jenis_kelamin;
+        $guru->mapel_id = $request->mapel_id;
+        $guru->update();
+
+        return response()->json('Data berhasil disimpan');
     }
 
     /**
@@ -79,8 +130,11 @@ class GuruController extends Controller
      * @param  \App\Models\guru  $guru
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Guru $guru)
+    public function destroy($id)
     {
-        //
+        $guru = Guru::find($id);
+        $guru->delete();
+
+        return response()->json(null, 204);
     }
 }
