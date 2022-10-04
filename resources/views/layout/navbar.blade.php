@@ -9,7 +9,7 @@
 <ul class="navbar-nav ml-auto">
     <li class="nav-link">
         <div class="text-danger">
-            <a href="#" class="text-danger"><i class="fa fa-sign-out-alt"></i> Log Out</a>
+            <a href="{{route('logout')}}" class="text-danger"><i class="fa fa-sign-out-alt"></i> Log Out</a>
         </div>
     </li>
 </ul>

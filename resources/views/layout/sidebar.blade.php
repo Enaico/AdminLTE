@@ -13,7 +13,7 @@
                         <img src="https://media.tenor.com/lcZnFyKRX5gAAAAd/luffy-anime.gif" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Sans. El Terkcs</a>
+                        <a href="#" class="d-block">{{Auth()->user()->name}}</a>
                     </div>
                 </div>
 
